@@ -11,5 +11,5 @@ app.use(cors())
 app.use("/", midIdRoutes)
 
 app.listen(process.env.PORT, () => {
-    console.warn(`server is running is http://${process.env.PORT}:/`)
+    console.warn(`server is running is http://localhost:${process.env.PORT}/`)
 })
