@@ -2,16 +2,15 @@ const axios = require("axios");
 
 // Load environment variables
 const clientID = process.env.CLIENT_ID;
-const clientSecret = process.env.CLIENT_SECRET;
-const redirectUri = process.env.CALLBACK_URL;
-const authorizationUrl = process.env.AUTHORIZATION_URL;
-const tokenUrl = process.env.TOKEN_URL;
+const clientSecret = process.env.CRIIPTO_CLIENT_SECRET; 
+const redirectUri = encodeURIComponent(process.env.REDIRECT_URI);
+const criiptoDomain = process.env.CRIIPTO_DOMAIN;
 
 exports.loginWithMidId = async (req, res) => {
     try {
-        const authUrl = `${authorizationUrl}?response_type=code&client_id=${clientID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=openid`;
-        console.log("Redirecting to:", authUrl);
-        res.redirect(authUrl);  
+        const authorizationUrl = `${criiptoDomain}/oauth2/authorize?response_type=code&client_id=${clientID}&redirect_uri=${redirectUri}&scope=openid`;
+        console.log("Redirecting to:", authorizationUrl);
+        res.redirect(authorizationUrl);  
     } catch (error) {
         console.error("Error in loginWithMidId:", error);
         res.status(500).json({ statusCode: 500, message: "Failed to initiate login", error: error.message });
@@ -27,15 +26,14 @@ exports.callBackMidId = async (req, res) => {
     }
 
     try {
-        // Exchange authorization code for tokens
         const response = await axios.post(
-            tokenUrl,
+            `${criiptoDomain}/oauth2/token`, 
             new URLSearchParams({
                 client_id: clientID,
                 client_secret: clientSecret,
                 code: code,
                 grant_type: "authorization_code",
-                redirect_uri: redirectUri,
+                redirect_uri: process.env.REDIRECT_URI,
             }).toString(),
             {
                 headers: {
@@ -47,10 +45,9 @@ exports.callBackMidId = async (req, res) => {
         const tokens = response.data;
         console.log("Tokens received:", tokens);
 
-        // Send tokens back to client (In production, consider storing them securely server-side)
         return res.status(200).json({ statusCode: 200, message: "Successfully logged in", data: tokens });
     } catch (error) {
-        console.error("Error in callBackMidId:", error);
-        res.status(500).json({ statusCode: 500, message: "Internal server error", error: error.message });
+        console.error("Error in callBackMidId:", error.response ? error.response.data : error.message);
+        res.status(500).json({ statusCode: 500, message: "Internal server error", error: error.response ? error.response.data : error.message });
     }
 };
