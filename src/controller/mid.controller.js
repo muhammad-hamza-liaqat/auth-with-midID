@@ -1,19 +1,20 @@
 const axios = require("axios");
 
-// from environment variables
+// Load environment variables
 const clientID = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_SECRET;
 const redirectUri = process.env.CALLBACK_URL;
 const authorizationUrl = process.env.AUTHORIZATION_URL;
+const tokenUrl = process.env.TOKEN_URL;
 
 exports.loginWithMidId = async (req, res) => {
     try {
-        const authUrl = `${authorizationUrl}?response_type=code&client_id=${clientID}&redirect_uri=${encodeURIComponent(redirectUri)}`;
+        const authUrl = `${authorizationUrl}?response_type=code&client_id=${clientID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=openid`;
         console.log("Redirecting to:", authUrl);
-        res.redirect(authUrl);
+        res.redirect(authUrl);  
     } catch (error) {
-        console.log("Error in loginWithMidId:", error);
-        return res.status(500).json({ statusCode: 500, message: "Failed to initiate login", error: error.message });
+        console.error("Error in loginWithMidId:", error);
+        res.status(500).json({ statusCode: 500, message: "Failed to initiate login", error: error.message });
     }
 };
 
@@ -21,9 +22,14 @@ exports.callBackMidId = async (req, res) => {
     const code = req.query.code;
     console.log("Authorization code:", code);
 
+    if (!code) {
+        return res.status(400).json({ statusCode: 400, message: "Authorization code not found" });
+    }
+
     try {
+        // Exchange authorization code for tokens
         const response = await axios.post(
-            "https://mitid-provider.com/token",
+            tokenUrl,
             new URLSearchParams({
                 client_id: clientID,
                 client_secret: clientSecret,
@@ -39,9 +45,12 @@ exports.callBackMidId = async (req, res) => {
         );
 
         const tokens = response.data;
+        console.log("Tokens received:", tokens);
+
+        // Send tokens back to client (In production, consider storing them securely server-side)
         return res.status(200).json({ statusCode: 200, message: "Successfully logged in", data: tokens });
     } catch (error) {
-        console.log("Error in callBackMidId:", error);
-        return res.status(500).json({ statusCode: 500, message: "Internal server error", error: error.message });
+        console.error("Error in callBackMidId:", error);
+        res.status(500).json({ statusCode: 500, message: "Internal server error", error: error.message });
     }
 };
