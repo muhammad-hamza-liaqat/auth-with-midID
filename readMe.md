@@ -1,4 +1,4 @@
-# Node.js express.js MongoDB JWT REST API - Basic Project Skeleton
+# Node.js Express.js - Authentication using MidId
 
 [![Author](http://img.shields.io/badge/author-@HamzaLiaqat-blue.svg?style=flat-square)](https://www.linkedin.com/in/muhammad-hamza-529377175/)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](https://github.com/davellanedam/node-express-mongodb-jwt-rest-api-skeleton/blob/master/LICENSE)
