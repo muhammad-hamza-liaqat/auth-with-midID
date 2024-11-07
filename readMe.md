@@ -1,6 +1,6 @@
 # Node.js express.js MongoDB JWT REST API - Basic Project Skeleton
 
-[![Author](http://img.shields.io/badge/author-@davellanedam-blue.svg?style=flat-square)](https://www.linkedin.com/in/muhammad-hamza-529377175/)
+[![Author](http://img.shields.io/badge/author-@HamzaLiaqat-blue.svg?style=flat-square)](https://www.linkedin.com/in/muhammad-hamza-529377175/)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](https://github.com/davellanedam/node-express-mongodb-jwt-rest-api-skeleton/blob/master/LICENSE)
 [![Tag](https://img.shields.io/github/tag/davellanedam/node-express-mongodb-jwt-rest-api-skeleton.svg?style=flat-square)](https://github.com/davellanedam/node-express-mongodb-jwt-rest-api-skeleton/tags)
 [![Travis](https://img.shields.io/travis/com/davellanedam/node-express-mongodb-jwt-rest-api-skeleton.svg?style=flat-square)]()
@@ -9,7 +9,7 @@
 
 ## Getting started
 
-This is a basic API REST skeleton written on JavaScript using async/await. Great for building a starter web API for your front-end (Android, iOS, Vue, react, angular, or anything that can consume an API)
+This is a basic code, an implementation of authentication in nodejs using midId, criipto.
 
 This project is created to help other developers create a **basic REST API in an easy way with Node.js**. This basic example shows how powerful and simple JavaScript can be. Do you want to contribute? Pull requests are always welcome to show more features.
 
