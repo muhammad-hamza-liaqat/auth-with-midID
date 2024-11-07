@@ -1,6 +1,5 @@
 import { Issuer, generators } from 'openid-client';
 import dotenv from "dotenv";
-
 dotenv.config();
 
 let client;
