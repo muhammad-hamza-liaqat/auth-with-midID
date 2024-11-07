@@ -1,2 +1,6 @@
-http://localhost:3000 {=>} {login}
-http://localhost:3000/callback {=>} {callback}
+{
+  "routes": {
+    "http://localhost:3000": "login",
+    "http://localhost:3000/callback": "callback"
+  }
+}
