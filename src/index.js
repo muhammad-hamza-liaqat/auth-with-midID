@@ -1,15 +1,22 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
-const express = require("express");
+import express from "express";
+import authRoutes from "./routes/auth.routes.js";
+import { initializeClient } from "./services/authService.js";
+
 const app = express();
-const bodyParser = require("body-parser")
-const cors = require("cors");
-const midIdRoutes = require("./routes/mid.routes");
+app.use("/", authRoutes);
 
-app.use(bodyParser.json());
-app.use(cors())
-app.use("/", midIdRoutes)
+initializeClient()
+  .then(() => {
+    console.log("OpenID client initialized");
+  })
+  .catch((error) => {
+    console.error("Failed to initialize OpenID client:", error);
+    process.exit(1);
+  });
 
 app.listen(process.env.PORT, () => {
-    console.warn(`server is running is http://localhost:${process.env.PORT}/`)
-})
+  console.log(`Server is running at http://localhost:${process.env.PORT}`);
+});
