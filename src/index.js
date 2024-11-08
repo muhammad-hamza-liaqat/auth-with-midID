@@ -2,12 +2,13 @@ require("dotenv").config();
 
 const express = require("express");
 const passport = require("passport");
+const session = require("express-session")
 require("./config/passportConfig");
 const authRoutes = require("./routes/auth.routes")
 const app = express();
 
 app.use(session({
-  secret: 'your_secret_key',
+  secret: 'hamza12345',
   resave: false,
   saveUninitialized: true,
 }));
