@@ -2,13 +2,20 @@ const express = require('express');
 const authRoutes = express.Router();
 const authController = require('../controller/auth.controller');
 
+// Google OAuth routes
 authRoutes.get('/auth/google', authController.googleAuth);
 authRoutes.get('/auth/google/callback', authController.googleAuthCallback);
+
+// Facebook OAuth routes
+authRoutes.get('/auth/facebook', authController.facebookAuth);
+authRoutes.get('/auth/facebook/callback', authController.facebookAuthCallback);
+
+// Logout route
 authRoutes.get('/logout', authController.logout);
+
+// Home route for testing authentication status
 authRoutes.get("/", (req, res) => {
     res.send(req.isAuthenticated() ? `Hello, ${req.user.displayName}` : 'Hello, Guest. Please log in.');
-
-})
-// redot pay
+});
 
 module.exports = authRoutes;
