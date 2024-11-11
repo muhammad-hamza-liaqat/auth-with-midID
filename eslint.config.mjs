@@ -12,10 +12,11 @@ export default [
       },
     },
     rules: {
-      quotes: ["error", "single"], // Enforce single quotes
+      quotes: ["error", "single"],
+      semi: ["error", "never"],
     },
   },
-  { 
+  {
     languageOptions: {
       globals: globals.browser,
     },
