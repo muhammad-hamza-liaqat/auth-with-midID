@@ -71,4 +71,20 @@ These endpoints initiate and handle OAuth authentication flows for Google, Faceb
   GET http://localhost:${process.env.PORT}/auth/github/callback
   ```
 
+### Twitter OAuth Endpoints
+
+- **Initiate Twitter OAuth**  
+  Starts the Twitter authentication process.
+
+  ```
+  GET http://localhost:${process.env.PORT}/auth/twitter
+  ```
+
+- **twitter OAuth Callback**  
+  Handles twitter’s response after authentication.
+
+  ```
+  GET http://localhost:${process.env.PORT}/auth/twitter/callback
+  ```
+
 > **Note**: Replace `${process.env.PORT}` with the port number your application is running on.
