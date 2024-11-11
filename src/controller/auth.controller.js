@@ -21,6 +21,13 @@ exports.githubAuthCallback = passport.authenticate('github', {
     successRedirect: '/',
 });
 
+// twitter
+exports.twitterAuth = passport.authenticate('twitter');
+exports.twitterAuthCallback = passport.authenticate('twitter', {
+    failureRedirect: '/login',
+    successRedirect: '/',
+});
+
 // Logout
 exports.logout = (req, res, next) => {
     req.logout((err) => {
