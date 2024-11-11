@@ -3,6 +3,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy
 const FacebookStrategy = require('passport-facebook').Strategy
 const GitHubStrategy = require('passport-github2').Strategy
 const TwitterStrategy = require('passport-twitter')
+const LinkedInStrategy = require('passport-linkedin-oauth2').Strategy
 
 const connectDB = require('./connection.mongodb')
 
@@ -110,6 +111,62 @@ passport.use(
                 console.error('Error while saving Twitter user into db', error.message)
                 return done(error, null)
             }
+        }
+    )
+)
+
+// linkedin
+// passport.use(
+//     new LinkedInStrategy(
+//         {
+//             clientID: process.env.LINKEDIN_CLIENT_ID,
+//             clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
+//             callbackURL: process.env.LINKEDIN_CALLBACK_URL,
+//             scope: ['openid', 'profile', 'email'],
+//             state: true
+//         },
+//         async (accessToken, refreshToken, profile, done) => {
+//             try {
+//                 console.log('access token', accessToken)
+//                 console.log('refresh', refreshToken)
+//                 console.log('profile', profile)
+//                 const db = await connectDB()
+//                 const userCollection = db.collection('users')
+
+//                 const existingUser = await userCollection.findOne({ linkedinId: profile.id })
+
+//                 if (!existingUser) {
+//                     const newUser = {
+//                         linkedinId: profile.id,
+//                         displayName: profile.displayName,
+//                         email: profile.emails && profile.emails[0] && profile.emails[0].value,
+//                         authMethod: 'LinkedIn'
+//                     }
+//                     await userCollection.insertOne(newUser)
+//                     console.log('New LinkedIn user added to the database')
+//                 } else {
+//                     console.log('LinkedIn user already exists in the database')
+//                 }
+
+//                 return done(null, profile)
+//             } catch (error) {
+//                 console.error('Error while saving LinkedIn user into db', error.message)
+//                 return done(error, null)
+//             }
+//         }
+//     )
+// )
+
+passport.use(
+    new LinkedInStrategy(
+        {
+            clientID: process.env.LINKEDIN_CLIENT_ID,
+            clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
+            callbackURL: process.env.LINKEDIN_CALLBACK_URL,
+            state: true, // Optional
+        },
+        async (accessToken, refreshToken, profile, done) => {
+            return done(null, profile)
         }
     )
 )

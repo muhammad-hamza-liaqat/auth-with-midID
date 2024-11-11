@@ -18,6 +18,10 @@ authRoutes.get('/auth/github/callback', authController.githubAuthCallback)
 authRoutes.get('/auth/twitter', authController.twitterAuth)
 authRoutes.get('/auth/twitter/callback', authController.twitterAuthCallback)
 
+// linkedin Outh
+authRoutes.get('/auth/linkedin', authController.linkedinAuth)
+authRoutes.get('/auth/linkedin/callback', authController.linkedinAuthCallback)
+
 // Logout route
 authRoutes.get('/logout', authController.logout)
 

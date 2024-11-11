@@ -28,6 +28,13 @@ exports.twitterAuthCallback = passport.authenticate('twitter', {
     successRedirect: '/',
 })
 
+// Linkedin
+exports.linkedinAuth = passport.authenticate('linkedin')
+exports.linkedinAuthCallback = passport.authenticate('linkedin', {
+    failureRedirect: '/login',
+    successRedirect: '/',
+})
+
 // Logout
 exports.logout = (req, res, next) => {
     req.logout((err) => {
