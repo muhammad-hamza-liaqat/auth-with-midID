@@ -1,0 +1,11 @@
+<!-- this is how the user will save in mongodb -->
+
+{
+"\_id": {
+"$oid": "67319e043fed7f60d3e6a5ac"
+},
+"githubId": "184227813",
+"displayName": "Hamza-nodejs",
+"email": "m.hamza1782@gmail.com",
+"authMethod": "Github"
+}
