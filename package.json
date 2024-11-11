@@ -6,9 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
-    "lint": "eslint .",
-    "dev-lint": "npm run lint && npm run dev"
+    "dev": "eslint . --debug --fix && nodemon src/index.js",
+    "lint": "eslint ."
   },
   "keywords": [
     "mitid"
