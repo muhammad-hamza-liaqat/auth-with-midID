@@ -8,111 +8,119 @@ const LinkedInStrategy = require('passport-linkedin-oauth2').Strategy
 const connectDB = require('./connection.mongodb')
 
 passport.serializeUser((user, done) => {
-    done(null, user)
+  done(null, user)
 })
 
 passport.deserializeUser((user, done) => {
-    done(null, user)
+  done(null, user)
 })
 
 // google
 passport.use(
-    new GoogleStrategy(
-        {
-            clientID: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: process.env.GOOGLE_CALLBACK_URL,
-        },
-        (accessToken, refreshToken, profile, done) => {
-            return done(null, profile)
-        }
-    )
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: process.env.GOOGLE_CALLBACK_URL,
+    },
+    (accessToken, refreshToken, profile, done) => {
+      return done(null, profile)
+    },
+  ),
 )
 
 // facebook
-passport.use(new FacebookStrategy({
-    clientID: process.env.FACEBOOK_CLIENT_ID,
-    clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-    callbackURL: process.env.FACEBOOK_CALLBACK_URL,
-    profileFields: ['id', 'displayName', 'photos', 'email']
-}, (accessToken, refreshToken, profile, done) => done(null, profile)))
+passport.use(
+  new FacebookStrategy(
+    {
+      clientID: process.env.FACEBOOK_CLIENT_ID,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+      callbackURL: process.env.FACEBOOK_CALLBACK_URL,
+      profileFields: ['id', 'displayName', 'photos', 'email'],
+    },
+    (accessToken, refreshToken, profile, done) => done(null, profile),
+  ),
+)
 
 // github
 passport.use(
-    new GitHubStrategy(
-        {
-            clientID: process.env.GITHUB_CLIENT_ID,
-            clientSecret: process.env.GITHUB_CLIENT_SECRET,
-            callbackURL: process.env.GITHUB_CALLBACK_URL,
-            scope: ['user:email']
-        },
-        async (accessToken, refreshToken, profile, done) => {
-            try {
-                const db = await connectDB()
-                const userCollection = db.collection('users')
-                const existingUser = await userCollection.findOne({ githubId: profile.id })
+  new GitHubStrategy(
+    {
+      clientID: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      callbackURL: process.env.GITHUB_CALLBACK_URL,
+      scope: ['user:email'],
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        const db = await connectDB()
+        const userCollection = db.collection('users')
+        const existingUser = await userCollection.findOne({
+          githubId: profile.id,
+        })
 
-                if (!existingUser) {
-                    const newUser = {
-                        githubId: profile.id,
-                        displayName: profile.displayName,
-                        email: profile.emails && profile.emails[0].value,
-                        authMethod: 'Github'
-                    }
-                    await userCollection.insertOne(newUser)
-                    console.log('New GitHub user added to the database')
-                } else {
-                    console.log('GitHub user already exists in the database')
-                }
-
-                return done(null, profile)
-
-            } catch (error) {
-                console.error('Error while saving GitHub user into db', error.message)
-                return done(error, null)
-            }
+        if (!existingUser) {
+          const newUser = {
+            githubId: profile.id,
+            displayName: profile.displayName,
+            email: profile.emails && profile.emails[0].value,
+            authMethod: 'Github',
+          }
+          await userCollection.insertOne(newUser)
+          console.log('New GitHub user added to the database')
+        } else {
+          console.log('GitHub user already exists in the database')
         }
-    )
+
+        return done(null, profile)
+      } catch (error) {
+        console.error('Error while saving GitHub user into db', error.message)
+        return done(error, null)
+      }
+    },
+  ),
 )
 
 // twitter
 passport.use(
-    new TwitterStrategy(
-        {
-            consumerKey: process.env.TWITTER_API_KEY,
-            consumerSecret: process.env.TWITTER_API_SECRET,
-            callbackURL: process.env.TWITTER_CALLBACK_URL,
-        },
-        async (token, tokenSecret, profile, done) => {
-            console.log('Token:', token)
-            console.log('Token Secret:', tokenSecret)
-            console.log('Profile:', profile)
-            try {
-                const db = await connectDB()
-                const userCollection = db.collection('users')
+  new TwitterStrategy(
+    {
+      consumerKey: process.env.TWITTER_API_KEY,
+      consumerSecret: process.env.TWITTER_API_SECRET,
+      callbackURL: process.env.TWITTER_CALLBACK_URL,
+    },
+    async (token, tokenSecret, profile, done) => {
+      console.log('Token:', token)
+      console.log('Token Secret:', tokenSecret)
+      console.log('Profile:', profile)
+      try {
+        const db = await connectDB()
+        const userCollection = db.collection('users')
 
-                const existingUser = await userCollection.findOne({ twitterId: profile.id })
+        const existingUser = await userCollection.findOne({
+          twitterId: profile.id,
+        })
 
-                if (!existingUser) {
-                    const newUser = {
-                        twitterId: profile.id,
-                        displayName: profile.displayName,
-                        username: profile.username,
-                        authMethod: 'Twitter',
-                    }
-                    await userCollection.insertOne(newUser)
-                    console.log('New Twitter user added to the database')
-                } else {
-                    console.log('Twitter user already exists in the database')
-                }
-
-                return done(null, profile)
-            } catch (error) {
-                console.error('Error while saving Twitter user into db', error.message)
-                return done(error, null)
-            }
+        if (!existingUser) {
+          const newUser = {
+            twitterId: profile.id,
+            displayName: profile.displayName,
+            username: profile.username,
+            authMethod: 'Twitter',
+          }
+          await userCollection.insertOne(newUser)
+          console.log('New Twitter user added to the database')
+        } else {
+          console.log('Twitter user already exists in the database')
         }
-    )
+
+        return done(null, profile)
+      } catch (error) {
+        console.error('Error while saving Twitter user into db', error.message)
+        return done(error, null)
+      }
+    },
+  ),
 )
 
 // linkedin
@@ -158,15 +166,19 @@ passport.use(
 // )
 
 passport.use(
-    new LinkedInStrategy(
-        {
-            clientID: process.env.LINKEDIN_CLIENT_ID,
-            clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
-            callbackURL: process.env.LINKEDIN_CALLBACK_URL,
-            state: true, // Optional
-        },
-        async (accessToken, refreshToken, profile, done) => {
-            return done(null, profile)
-        }
-    )
+  new LinkedInStrategy(
+    {
+      clientID: process.env.LINKEDIN_CLIENT_ID,
+      clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
+      callbackURL: process.env.LINKEDIN_CALLBACK_URL,
+      scope: ['openid', 'profile'],
+      state: true,
+      // autheticating but not viewing the profile
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      console.log('Access Token:', accessToken)
+      console.log('Profile:', profile)
+      return done(null, profile)
+    },
+  ),
 )

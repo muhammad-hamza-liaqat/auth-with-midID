@@ -7,11 +7,13 @@ require('./config/passportConfig')
 const authRoutes = require('./routes/auth.routes')
 const app = express()
 
-app.use(session({
-  secret: 'hamza12345',
-  resave: false,
-  saveUninitialized: true,
-}))
+app.use(
+  session({
+    secret: 'hamza12345',
+    resave: false,
+    saveUninitialized: true,
+  }),
+)
 app.use(passport.initialize())
 app.use(passport.session())
 

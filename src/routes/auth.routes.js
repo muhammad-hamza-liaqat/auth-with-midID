@@ -27,7 +27,11 @@ authRoutes.get('/logout', authController.logout)
 
 // Home route for testing authentication status
 authRoutes.get('/', (req, res) => {
-    res.send(req.isAuthenticated() ? `Hello, ${req.user.displayName}` : 'Hello, Guest. Please log in.')
+  res.send(
+    req.isAuthenticated()
+      ? `Hello, ${req.user.displayName}`
+      : 'Hello, Guest. Please log in.',
+  )
 })
 
 module.exports = authRoutes
