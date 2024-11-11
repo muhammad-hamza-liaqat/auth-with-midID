@@ -1,48 +1,32 @@
 const passport = require('passport')
 
+const failureRedirect = { failureRedirect: '/login', successRedirect: '/' }
+
 // Google
-exports.googleAuth = passport.authenticate('google', {
-  scope: ['profile', 'email'],
-})
-exports.googleAuthCallback = passport.authenticate('google', {
-  failureRedirect: '/login',
-  successRedirect: '/',
-})
+exports.googleAuth = passport.authenticate('google', { scope: ['profile', 'email'] })
+exports.googleAuthCallback = passport.authenticate('google', failureRedirect)
 
-// fb
+// Facebook
 exports.facebookAuth = passport.authenticate('facebook', { scope: ['email'] })
-exports.facebookAuthCallback = passport.authenticate('facebook', {
-  failureRedirect: '/login',
-  successRedirect: '/',
-})
+exports.facebookAuthCallback = passport.authenticate('facebook', failureRedirect)
 
-// github
+// GitHub
 exports.githubAuth = passport.authenticate('github', { scope: ['user:email'] })
-exports.githubAuthCallback = passport.authenticate('github', {
-  failureRedirect: '/login',
-  successRedirect: '/',
-})
+exports.githubAuthCallback = passport.authenticate('github', failureRedirect)
 
-// twitter
+// Twitter
 exports.twitterAuth = passport.authenticate('twitter')
-exports.twitterAuthCallback = passport.authenticate('twitter', {
-  failureRedirect: '/login',
-  successRedirect: '/',
-})
+exports.twitterAuthCallback = passport.authenticate('twitter', failureRedirect)
 
-// Linkedin
+// LinkedIn
 exports.linkedinAuth = passport.authenticate('linkedin')
-exports.linkedinAuthCallback = passport.authenticate('linkedin', {
-  failureRedirect: '/login',
-  successRedirect: '/',
-})
+exports.linkedinAuthCallback = passport.authenticate('linkedin', failureRedirect)
 
 // Logout
-exports.logout = (req, res, next) => {
+exports.logout = async (req, res, next) => {
   req.logout((err) => {
-    if (err) {
-      return next(err)
-    }
+    if (err) return next(err)
     res.redirect('/')
   })
 }
+

@@ -12,6 +12,7 @@ app.use(
     secret: 'hamza12345',
     resave: false,
     saveUninitialized: true,
+    cookie: { secure: false }
   }),
 )
 app.use(passport.initialize())
