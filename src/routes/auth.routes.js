@@ -10,6 +10,10 @@ authRoutes.get('/auth/google/callback', authController.googleAuthCallback);
 authRoutes.get('/auth/facebook', authController.facebookAuth);
 authRoutes.get('/auth/facebook/callback', authController.facebookAuthCallback);
 
+// Github OAuth routes
+authRoutes.get('/auth/github', authController.githubAuth);
+authRoutes.get('/auth/github/callback', authController.githubAuthCallback);
+
 // Logout route
 authRoutes.get('/logout', authController.logout);
 

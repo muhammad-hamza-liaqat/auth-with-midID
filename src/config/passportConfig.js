@@ -1,6 +1,7 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
+const GitHubStrategy = require("passport-github2").Strategy;
 
 passport.serializeUser((user, done) => {
     done(null, user);
@@ -31,3 +32,19 @@ passport.use(new FacebookStrategy({
     callbackURL: process.env.FACEBOOK_CALLBACK_URL,
     profileFields: ['id', 'displayName', 'photos', 'email']
 }, (accessToken, refreshToken, profile, done) => done(null, profile)));
+
+// github strategy
+
+passport.use(
+    new GitHubStrategy(
+        {
+            clientID: process.env.GITHUB_CLIENT_ID,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET,
+            callbackURL: process.env.GITHUB_CALLBACK_URL,
+        },
+        (accessToken, refreshToken, profile, done) => {
+            // Here you can add the code to save GitHub profile data to the database.
+            return done(null, profile);
+        }
+    )
+);
