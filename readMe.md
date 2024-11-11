@@ -89,3 +89,5 @@ These endpoints initiate and handle OAuth authentication flows for Google, Faceb
 
 > **Note**: Replace `${process.env.PORT}` with the port number your application is running on.
 > **EsLint**: npx eslint . --fix To apply automatic fixes for minor issues
+
+npm run dev-lint -> for lint first then run server
