@@ -13,7 +13,6 @@ passport.deserializeUser((user, done) => {
     done(null, user);
 });
 
-// Google strategy
 passport.use(
     new GoogleStrategy(
         {
@@ -27,7 +26,6 @@ passport.use(
     )
 );
 
-// Facebook strategy
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_CLIENT_ID,
     clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
@@ -35,28 +33,26 @@ passport.use(new FacebookStrategy({
     profileFields: ['id', 'displayName', 'photos', 'email']
 }, (accessToken, refreshToken, profile, done) => done(null, profile)));
 
-// GitHub strategy
 passport.use(
     new GitHubStrategy(
         {
             clientID: process.env.GITHUB_CLIENT_ID,
             clientSecret: process.env.GITHUB_CLIENT_SECRET,
             callbackURL: process.env.GITHUB_CALLBACK_URL,
+            scope: ["user:email"]
         },
         async (accessToken, refreshToken, profile, done) => {
             try {
                 const db = await connectDB();
                 const userCollection = db.collection("users");
-
-                // Check if user already exists
                 const existingUser = await userCollection.findOne({ githubId: profile.id });
 
                 if (!existingUser) {
-                    // Create a new user if not found
                     const newUser = {
                         githubId: profile.id,
                         displayName: profile.displayName,
                         email: profile.emails && profile.emails[0].value,
+                        authMethod: "Github"
                     };
                     await userCollection.insertOne(newUser);
                     console.log("New GitHub user added to the database");
@@ -64,7 +60,6 @@ passport.use(
                     console.log("GitHub user already exists in the database");
                 }
 
-                // Successfully return the profile
                 return done(null, profile);
 
             } catch (error) {
