@@ -1,10 +1,10 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
-const GitHubStrategy = require("passport-github2").Strategy;
-const TwitterStrategy = require("passport-twitter")
+const GitHubStrategy = require('passport-github2').Strategy;
+const TwitterStrategy = require('passport-twitter')
 
-const connectDB = require("./connection.mongodb");
+const connectDB = require('./connection.mongodb');
 
 passport.serializeUser((user, done) => {
     done(null, user);
@@ -43,12 +43,12 @@ passport.use(
             clientID: process.env.GITHUB_CLIENT_ID,
             clientSecret: process.env.GITHUB_CLIENT_SECRET,
             callbackURL: process.env.GITHUB_CALLBACK_URL,
-            scope: ["user:email"]
+            scope: ['user:email']
         },
         async (accessToken, refreshToken, profile, done) => {
             try {
                 const db = await connectDB();
-                const userCollection = db.collection("users");
+                const userCollection = db.collection('users');
                 const existingUser = await userCollection.findOne({ githubId: profile.id });
 
                 if (!existingUser) {
@@ -56,18 +56,18 @@ passport.use(
                         githubId: profile.id,
                         displayName: profile.displayName,
                         email: profile.emails && profile.emails[0].value,
-                        authMethod: "Github"
+                        authMethod: 'Github'
                     };
                     await userCollection.insertOne(newUser);
-                    console.log("New GitHub user added to the database");
+                    console.log('New GitHub user added to the database');
                 } else {
-                    console.log("GitHub user already exists in the database");
+                    console.log('GitHub user already exists in the database');
                 }
 
                 return done(null, profile);
 
             } catch (error) {
-                console.error("Error while saving GitHub user into db", error.message);
+                console.error('Error while saving GitHub user into db', error.message);
                 return done(error, null);
             }
         }
@@ -83,9 +83,9 @@ passport.use(
             callbackURL: process.env.TWITTER_CALLBACK_URL,
         },
         async (token, tokenSecret, profile, done) => {
-            console.log("Token:", token);
-            console.log("Token Secret:", tokenSecret);
-            console.log("Profile:", profile);
+            console.log('Token:', token);
+            console.log('Token Secret:', tokenSecret);
+            console.log('Profile:', profile);
             try {
                 const db = await connectDB();
                 const userCollection = db.collection('users');
