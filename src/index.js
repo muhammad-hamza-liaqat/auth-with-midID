@@ -16,6 +16,11 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.use(express.json())
+
+// server route
+app.get('/', (req, res) => {
+  res.send('<h1>Welcome to the Home Page</h1><p>This is the home route of your application.</p>');
+});
 app.use('/', authRoutes)
 
 app.listen(process.env.PORT, () => {
