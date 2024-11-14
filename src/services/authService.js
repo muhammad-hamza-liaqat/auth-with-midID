@@ -25,7 +25,7 @@ export async function initializeClient() {
         response_types: ['code'],
     });
 
-    console.log("OpenID client initialized");
+    // console.log("OpenID client initialized");
     return client;
 }
 
