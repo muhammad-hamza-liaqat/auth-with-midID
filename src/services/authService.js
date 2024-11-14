@@ -1,5 +1,5 @@
 import { Issuer, generators } from 'openid-client';
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 dotenv.config();
 
 let client;
@@ -24,20 +24,36 @@ export async function initializeClient() {
         redirect_uris: [redirectUri],
         response_types: ['code'],
     });
+
+    console.log("OpenID client initialized");
+    return client;
 }
 
 export function getAuthorizationUrl() {
     const state = generators.state();
+    console.log("state", state)
     const nonce = generators.nonce();
+    console.log("nonce", nonce)
+
     return client.authorizationUrl({
         scope: 'openid',
         state,
         nonce,
-        acr_values: 'urn:grn:authn:dk:mitid:substantial',
+        // acr_values: 'urn:grn:authn:dk:mitid:substantial',
     });
 }
 
 export async function handleCallback(req) {
     const params = client.callbackParams(req);
-    return await client.callback(process.env.REDIRECT_URI, params, { state: params.state });
+    console.log("Received callback parameters:", params);
+    try {
+        const tokenSet = await client.callback(process.env.REDIRECT_URI, params, { state: params.state });
+        console.log("Token Set:", tokenSet);
+        return tokenSet;
+    } catch (error) {
+        console.error("Error during callback:", error);
+        throw error;
+    }
 }
+
+export { client };
