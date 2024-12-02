@@ -37,3 +37,11 @@ exports.logout = (req, res, next) => {
         res.redirect('/')
     })
 }
+
+// TikTok
+exports.tiktokAuth = passport.authenticate('tiktok', { scope: ['user.info.basic'] });
+exports.tiktokAuthCallback = passport.authenticate('tiktok', {
+    failureRedirect: '/login',
+    successRedirect: '/',
+});
+

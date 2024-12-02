@@ -3,6 +3,8 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy
 const FacebookStrategy = require('passport-facebook').Strategy
 const GitHubStrategy = require('passport-github2').Strategy
 const TwitterStrategy = require('passport-twitter')
+const OAuth2Strategy = require('passport-oauth2').Strategy;
+
 
 const connectDB = require('./connection.mongodb')
 
@@ -113,3 +115,41 @@ passport.use(
         }
     )
 )
+
+// tiktok
+passport.use(
+    'tiktok',
+    new OAuth2Strategy(
+        {
+            authorizationURL: process.env.TIKTOK_AUTHORIZATION_URL,
+            tokenURL: process.env.TIKTOK_TOKEN_URL,
+            clientID: process.env.TIKTOK_CLIENT_ID,
+            clientSecret: process.env.TIKTOK_CLIENT_SECRET,
+            callbackURL: process.env.TIKTOK_CALLBACK_URL,
+        },
+        async (accessToken, refreshToken, params, done) => {
+            try {
+                // Retrieve user info using the TikTok API
+                const userProfileResponse = await fetch(
+                    `https://open-api.tiktok.com/user/info/`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                    }
+                );
+                const userProfile = await userProfileResponse.json();
+
+                if (userProfile && userProfile.data) {
+                    return done(null, userProfile.data);
+                } else {
+                    throw new Error('Failed to fetch TikTok user profile');
+                }
+            } catch (error) {
+                console.error('Error during TikTok authentication:', error.message);
+                return done(error, null);
+            }
+        }
+    )
+);

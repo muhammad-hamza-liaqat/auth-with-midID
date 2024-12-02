@@ -26,4 +26,18 @@ authRoutes.get('/', (req, res) => {
     res.send(req.isAuthenticated() ? `Hello, ${req.user.displayName}` : 'Hello, Guest. Please log in.')
 })
 
+// TikTok OAuth routes
+authRoutes.get(
+    '/auth/tiktok',
+    passport.authenticate('tiktok', { scope: ['user.info.basic'] })
+);
+authRoutes.get(
+    '/auth/tiktok/callback',
+    passport.authenticate('tiktok', {
+        failureRedirect: '/login',
+        successRedirect: '/',
+    })
+);
+
+
 module.exports = authRoutes
