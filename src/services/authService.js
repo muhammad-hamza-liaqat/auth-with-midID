@@ -47,7 +47,10 @@ export async function handleCallback(req) {
     const params = client.callbackParams(req);
     console.log("Received callback parameters:", params);
     try {
-        const tokenSet = await client.callback(process.env.REDIRECT_URI, params, { state: params.state });
+        const tokenSet = await client.callback(process.env.REDIRECT_URI, params, {
+            state: params.state,
+            clockTolerance: 60
+        });
         console.log("Token Set:", tokenSet);
         return tokenSet;
     } catch (error) {
